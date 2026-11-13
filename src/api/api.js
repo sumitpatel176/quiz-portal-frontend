@@ -1,0 +1,138 @@
+import axios from 'axios';
+import React from 'react'
+
+// In-Memory Token Variable (RAM storage for Access Token)
+let memoryToken = null;
+
+
+export const setMemoryToken = (token) => {
+    memoryToken = token;
+};
+
+export const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+
+
+const API = axios.create({
+    baseURL: BASE_URL,
+    headers:{
+        'Content-Type':'application/json'
+    },
+    withCredentials: true
+});
+
+  API.interceptors.request.use(
+    (config) => {
+        if (memoryToken) {
+            config.headers['Authorization'] = `Bearer ${memoryToken}`;
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
+
+// RESPONSE INTERCEPTOR (Auto Retry & Refresh Queue)
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+    failedQueue.forEach((prom) => {
+        if (error) {
+            prom.reject(error);
+        } else {
+            prom.resolve(token);
+        }
+    });
+    failedQueue = [];
+};
+
+API.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        const originalRequest = error.config;
+
+        // Agar Request 401 ya 403 throw kare aur pehle retry na hui ho
+        if (error.response && (error.response.status === 401 || error.response.status === 403) && !originalRequest._retry) {
+            
+            if (isRefreshing) {
+                // Agar Refresh pehle se chal raha hai, toh baki requests ko queue mein daal do
+                return new Promise((resolve, reject) => {
+                    failedQueue.push({ resolve, reject });
+                })
+                    .then((token) => {
+                        originalRequest.headers['Authorization'] = `Bearer ${token}`;
+                        return API(originalRequest);
+                    })
+                    .catch((err) => Promise.reject(err));
+            }
+
+            originalRequest._retry = true;
+            isRefreshing = true;
+
+            try {
+                // Background Refresh Call
+                console.log("1. Silent refresh request bhej rahe hain...");
+                const response = await axios.post(
+                    `${BASE_URL}/v1/auth/refresh`,
+                    {},
+                    { withCredentials: true }
+                );
+                console.log("2. Refresh Successful! Naya Token:", response.data.accessToken);
+
+                const newAccessToken = response.data.accessToken;
+
+                // Memory State Update
+                setMemoryToken(newAccessToken);
+
+                // Queue mein phansi baaki saari requests ko naya token pass karo
+                processQueue(null, newAccessToken);
+
+                // Original failed request ko retry karo
+                originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
+                return API(originalRequest);
+
+            } catch (refreshError) {
+                processQueue(refreshError, null);
+
+                // Refresh bhi fail ho gaya (Session Expired) -> Logout
+                setMemoryToken(null);
+                localStorage.removeItem("quiz_user");
+                localStorage.removeItem("userRole");
+                window.location.href = '/login';
+                return Promise.reject(refreshError);
+            } finally {
+                isRefreshing = false;
+            }
+        }
+
+        return Promise.reject(error);
+    }
+);
+
+export const registerUser = (userData)=>API.post('/v1/auth/register',userData);
+export const loginUser = (credentials) => API.post('/v1/auth/login', credentials);
+export const logoutUser = () => API.post('/v1/auth/logout');
+export const getUserProfile = ()=>API.get('/user/me');
+
+export const createQuiz = (quizData)=>API.post('admin/quizzes/createquiz', quizData);
+export const getAllQuizzes = ()=>API.get('quizzes/all');
+export const getQuizById = (id) => API.get(`/quizzes/${id}`);
+export const deleteQuiz = (id)=> API.delete(`admin/quizzes/deleteQuiz/${id}`);
+
+export const addQuestion = (quizId,question)=>API.post(`admin/questions/addQuestion/${quizId}` , question);
+export const getQuestionsByQuiz = (quizId)=>API.get(`/questions/quiz/${quizId}`);
+export const deleteQuestion = (questionId)=>API.delete(`admin/questions/deleteQuestiocdn/${questionId}`);
+
+
+export const saveResult = (resultData)=>API.post(`/results/submit`,resultData);
+export const getUserResults = ()=>API.get('/results/me');
+export const getLeaderboardByQuizId = (quizId)=>API.get(`/results/leaderboard/${quizId}`);
+export const getAllResults = (quizId) =>API.get(`admin/results/all/${quizId}`);
+
+
+export const logTabViolation = (attemptId) =>API.post(`/v1/attempts/${attemptId}/violation`);
+export const startQuizAttempt = (userId,quizId) =>API.post(`/v1/attempts/start/${userId}/${quizId}`);
+export const submitQuizAttempt = (attemptId,submitQuizRequest) =>API.post(`/v1/attempts/${attemptId}/submit`,submitQuizRequest);
+
+
+
+
