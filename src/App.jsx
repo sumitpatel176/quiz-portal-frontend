@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Navbar from './components/Navbar';
-import Register from './components/register';
+import Register from './components/Register';
 import Login from './components/Login';
 import QuizList from './components/QuizList';
 import TakeQuiz from './components/TakeQuiz';
