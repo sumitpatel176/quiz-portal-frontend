@@ -11,13 +11,19 @@ html, body {
   font-family: system-ui, -apple-system, sans-serif;
 }
 
-/* 2. Sabhi Tables (History, Leaderboard, Admin Lists) Mobile Safe */
+/* 2. Sabhi Tables (Desktop Full-Width + Mobile Scroll Safe) */
 table {
   width: 100%;
   border-collapse: collapse;
-  display: block;
-  overflow-x: auto;
   white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 /* 3. Forms, Inputs & Buttons (Admin Page + Login/Register) */

@@ -38,6 +38,17 @@ export const AuthProvider = ({ children }) => {
 
                 const newAccessToken =response.data.accessToken;
                 updateAccessToken(newAccessToken);
+
+                const savedRole = response.data.role || localStorage.getItem("userRole");
+                const savedUser = response.data.user || JSON.parse(localStorage.getItem("quiz_user"));
+
+                if (!savedRole || !savedUser) {
+                    throw new Error("Incomplete session data");
+                }
+
+                setRole(savedRole);
+                setUser(savedUser);
+
             } catch (error) {
                 updateAccessToken(null);
                 setUser(null);
@@ -81,7 +92,7 @@ export const AuthProvider = ({ children }) => {
 };
 
     // Helper method to check if user is logged in
-    const isAuthenticated = !!accessToken;
+    const isAuthenticated = Boolean(accessToken && user && role);
 
     return (
         <AuthContext.Provider value={{ user, accessToken , role, login, logout, isAuthenticated }}>

@@ -31,7 +31,9 @@ const ProtectedRoute = ({ children, allowedRole }) => {
       .map((r) => r.toUpperCase().replace(/^ROLE_/, ''));
 
     
+    console.log("sdfsf  ",rawRole);
 
+    console.log("required roel ", requiredRoles)
     
     const hasPermission = requiredRoles.includes(userRole);
     if (!hasPermission) {
