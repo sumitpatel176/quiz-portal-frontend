@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
         const restoreSession = async () => {
             try {
                 const response = await axios.post(
-                     `${BASE_URL}/v1/auth/refresh`,
+                     `${BASE_URL}/api/v1/auth/refresh`,
                     {},
                     { withCredentials: true }
                 );
