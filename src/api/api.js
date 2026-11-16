@@ -108,19 +108,19 @@ API.interceptors.response.use(
     }
 );
 
-export const registerUser = (userData)=>API.post('/v1/auth/register',userData);
-export const loginUser = (credentials) => API.post('/v1/auth/login', credentials);
-export const logoutUser = () => API.post('/v1/auth/logout');
-export const getUserProfile = ()=>API.get('/user/me');
+export const registerUser = (userData)=>API.post('/api/v1/auth/register',userData);
+export const loginUser = (credentials) => API.post('/api/v1/auth/login', credentials);
+export const logoutUser = () => API.post('/api/v1/auth/logout');
+export const getUserProfile = ()=>API.get('/api/user/me');
 
-export const createQuiz = (quizData)=>API.post('admin/quizzes/createquiz', quizData);
-export const getAllQuizzes = ()=>API.get('quizzes/all');
-export const getQuizById = (id) => API.get(`/quizzes/${id}`);
-export const deleteQuiz = (id)=> API.delete(`admin/quizzes/deleteQuiz/${id}`);
+export const createQuiz = (quizData)=>API.post('/api/admin/quizzes/createquiz', quizData);
+export const getAllQuizzes = ()=>API.get('/api/quizzes/all');
+export const getQuizById = (id) => API.get(`/api/quizzes/${id}`);
+export const deleteQuiz = (id)=> API.delete(`/api/admin/quizzes/deleteQuiz/${id}`);
 
-export const addQuestion = (quizId,question)=>API.post(`admin/questions/addQuestion/${quizId}` , question);
-export const getQuestionsByQuiz = (quizId)=>API.get(`/questions/quiz/${quizId}`);
-export const deleteQuestion = (questionId)=>API.delete(`admin/questions/deleteQuestiocdn/${questionId}`);
+export const addQuestion = (quizId,question)=>API.post(`/api/admin/questions/addQuestion/${quizId}` , question);
+export const getQuestionsByQuiz = (quizId)=>API.get(`/api/questions/quiz/${quizId}`);
+export const deleteQuestion = (questionId)=>API.delete(`/api/admin/questions/deleteQuestiocdn/${questionId}`);
 
 
 export const saveResult = (resultData)=>API.post(`/results/submit`,resultData);
@@ -129,9 +129,9 @@ export const getLeaderboardByQuizId = (quizId)=>API.get(`/results/leaderboard/${
 export const getAllResults = (quizId) =>API.get(`admin/results/all/${quizId}`);
 
 
-export const logTabViolation = (attemptId) =>API.post(`/v1/attempts/${attemptId}/violation`);
-export const startQuizAttempt = (userId,quizId) =>API.post(`/v1/attempts/start/${userId}/${quizId}`);
-export const submitQuizAttempt = (attemptId,submitQuizRequest) =>API.post(`/v1/attempts/${attemptId}/submit`,submitQuizRequest);
+export const logTabViolation = (attemptId) =>API.post(`/api/v1/attempts/${attemptId}/violation`);
+export const startQuizAttempt = (userId,quizId) =>API.post(`/api/v1/attempts/start/${userId}/${quizId}`);
+export const submitQuizAttempt = (attemptId,submitQuizRequest) =>API.post(`/api/v1/attempts/${attemptId}/submit`,submitQuizRequest);
 
 
 
