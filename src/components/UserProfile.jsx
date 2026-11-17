@@ -19,6 +19,7 @@ const UserProfile = () => {
           try {
               const response = await getUserProfile();
               setProfileData(response.data);
+              
           } catch (err) {
               console.error("Failed to fetch quizzes", err);
           } finally {

@@ -123,10 +123,10 @@ export const getQuestionsByQuiz = (quizId)=>API.get(`/api/questions/quiz/${quizI
 export const deleteQuestion = (questionId)=>API.delete(`/api/admin/questions/deleteQuestiocdn/${questionId}`);
 
 
-export const saveResult = (resultData)=>API.post(`/results/submit`,resultData);
-export const getUserResults = ()=>API.get('/results/me');
-export const getLeaderboardByQuizId = (quizId)=>API.get(`/results/leaderboard/${quizId}`);
-export const getAllResults = (quizId) =>API.get(`admin/results/all/${quizId}`);
+export const saveResult = (resultData)=>API.post(`/api/results/submit`,resultData);
+export const getUserResults = ()=>API.get('/api/results/me');
+export const getLeaderboardByQuizId = (quizId)=>API.get(`/api/results/leaderboard/${quizId}`);
+export const getAllResults = (quizId) =>API.get(`/api/admin/results/all/${quizId}`);
 
 
 export const logTabViolation = (attemptId) =>API.post(`/api/v1/attempts/${attemptId}/violation`);
