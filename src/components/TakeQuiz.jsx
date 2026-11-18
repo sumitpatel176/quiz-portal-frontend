@@ -41,7 +41,7 @@ const TakeQuiz = () => {
         try {
             const res = await submitQuizAttempt(attemptId, { responses: formattedResponses });
             const data = res.data?.data || res.data;
-            
+
             // Submit hone par saved answers clear kar dein
             localStorage.removeItem(`quiz_answers_${id}`);
             setResultData(data);
@@ -92,9 +92,13 @@ const TakeQuiz = () => {
 
                 // Exact Remaining Time Calculate Karein
                 const durationInMins = quizDetails?.durationInMinutes || 30;
+                const maxAllowedSecs = durationInMins * 60;
                 const startTimeMs = new Date(attemptDto.startTime).getTime();
                 const durationMs = durationInMins * 60 * 1000;
-                const remainingSecs = Math.max(0, Math.floor((startTimeMs + durationMs - Date.now()) / 1000));
+                const remainingSecs = Math.min(
+                    maxAllowedSecs,
+                    Math.max(0, Math.floor((startTimeMs + durationMs - Date.now()) / 1000))
+                );
                 setTimeLeft(remainingSecs);
 
                 // Saved Answers Restore Karein
@@ -241,24 +245,24 @@ const TakeQuiz = () => {
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1.5rem' }}>
-                <button 
-                    disabled={currentIndex === 0} 
+                <button
+                    disabled={currentIndex === 0}
                     onClick={() => setCurrentIndex(currentIndex - 1)}
                     style={styles.navBtn}
                 >
                     Previous
                 </button>
                 {currentIndex === questions.length - 1 ? (
-                    <button 
-                        disabled={submitting} 
-                        onClick={() => handleSubmit(false)} 
+                    <button
+                        disabled={submitting}
+                        onClick={() => handleSubmit(false)}
                         style={{ ...styles.navBtn, backgroundColor: '#16a34a', color: '#fff', fontWeight: 'bold' }}
                     >
                         {submitting ? 'Submitting...' : 'Submit Quiz'}
                     </button>
                 ) : (
-                    <button 
-                        onClick={handleNext} 
+                    <button
+                        onClick={handleNext}
                         style={{ ...styles.navBtn, backgroundColor: '#2563eb', color: '#fff' }}
                     >
                         Next
