@@ -9,7 +9,7 @@ export const setMemoryToken = (token) => {
     memoryToken = token;
 };
 
-export const BASE_URL = import.meta.env.VITE_API_URL;
+export const BASE_URL = import.meta.env.DEV ? import.meta.env.VITE_API_URL : "";
 
 
 const API = axios.create({
