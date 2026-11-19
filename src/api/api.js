@@ -70,7 +70,7 @@ API.interceptors.response.use(
 
             try {
                 // Background Refresh Call
-                console.log("1. Silent refresh request bhej rahe hain...");
+                
                 const response = await axios.post(
                     `${BASE_URL}/api/v1/auth/refresh`,
                     {},

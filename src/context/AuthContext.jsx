@@ -95,7 +95,7 @@ export const AuthProvider = ({ children }) => {
     const isAuthenticated = Boolean(accessToken && user && role);
 
     return (
-        <AuthContext.Provider value={{ user, accessToken , role, login, logout, isAuthenticated }}>
+        <AuthContext.Provider value={{ user, accessToken , loading, role, login, logout, isAuthenticated }}>
            {loading ? (
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
                     <h3>Loading session...</h3>

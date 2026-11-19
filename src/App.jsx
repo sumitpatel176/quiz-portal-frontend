@@ -16,10 +16,11 @@ import UserProfile from './components/UserProfile';
 
 // 🔒 Protected Route Guard Component
 const ProtectedRoute = ({ children, allowedRole }) => {
-  const { user, role , isAuthenticated} = useAuth();
+  const { user, role , isAuthenticated, loading} = useAuth();
 
   // 1. Agar logged in nahi hai, toh direct /login par bhejo
   if ( !isAuthenticated ) {
+    if (loading) return <div style={{ textAlign: 'center', marginTop: '3rem' }}>Loading...</div>;
     return <Navigate to="/login" replace />;
   }
 
