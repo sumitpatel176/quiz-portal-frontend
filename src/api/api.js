@@ -120,7 +120,7 @@ export const deleteQuiz = (id)=> API.delete(`/api/admin/quizzes/deleteQuiz/${id}
 
 export const addQuestion = (quizId,question)=>API.post(`/api/admin/questions/addQuestion/${quizId}` , question);
 export const getQuestionsByQuiz = (quizId)=>API.get(`/api/questions/quiz/${quizId}`);
-export const deleteQuestion = (questionId)=>API.delete(`/api/admin/questions/deleteQuestiocdn/${questionId}`);
+export const deleteQuestion = (questionId)=>API.delete(`/api/admin/questions/deleteQuestion/${questionId}`);
 
 
 export const saveResult = (resultData)=>API.post(`/api/results/submit`,resultData);
