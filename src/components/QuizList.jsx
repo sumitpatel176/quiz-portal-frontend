@@ -34,7 +34,7 @@ const QuizList = () => {
                     quizzes.map((quiz) => (
                         <div key={quiz.id} style={styles.card}>
                             <h3>{quiz.title}</h3>
-                            {quiz.category && <p style={styles.category}>Category: {quiz.category}</p>}
+                            {quiz.description && <p style={styles.category}>Description: {quiz.description}</p>}
                             <button 
                                 onClick={() => navigate(`/take-quiz/${quiz.id}`)} // Route matched
                                 style={styles.button}
